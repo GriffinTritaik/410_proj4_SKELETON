@@ -33,5 +33,24 @@ void Baker::bake_and_box(ORDER &anOrder) {
  * 		behave appropriately
  */
 void Baker::beBaker() {
-	
+	//Loop (not waiter_done)
+		//Sleep on cv
+
+		//Get order_in mutex (lockguard)
+		//get ONE order from oreder_in_q
+		//release previous lg
+
+		//call bake_and_box
+		//get orderout mutex (lg)
+		//push finished order onto oov
+		//release previous lg
+
+		//Will the two mutices give us DEADLOCK???
+
+		//repeat
+
+	//When out of loop: (when waiter is done)
+	//loop (while queue not empty):
+		//Get orders, box, send out, etc.
+		//until no orders on vector.
 }

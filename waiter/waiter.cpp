@@ -33,5 +33,14 @@ int Waiter::getNext(ORDER &anOrder){
 //when finished exits loop and signals baker(s) using cv_order_inQ that
 //it is done using b_WaiterIsFinished
 void Waiter::beWaiter() {
+	//Loop
+		//Get order (call getNext)
+			//Check if we ran out of orders
+			//handle out of orders
+				//set b_waiterisfinished = true
+		//grab order_in mutex w/lockguard
+		//Push order onto order_in_q
+		//Notify bakers w/ notify_all on cv_order_inQ
+		//repeat
 }
 
