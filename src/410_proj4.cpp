@@ -13,6 +13,7 @@
 #include "../includes/datastructs.h"
 #include "../includes/PRINT.h"
 
+//Henry Hates this
 using namespace std;
 
 //*************************************************
@@ -86,7 +87,27 @@ void audit_results() {
 
 int main()
 {
-	//TODO your code here
+	// Open sample input in waiter thread
+	// start waiter thread
+	std::thread waiter(doWaiter, 0, "../in1.txt");
+
+	// start bakers threads
+	std::thread baker0 (doBaker, 0);
+	std::thread baker1 (doBaker, 1);
+//	std::thread baker2 (doBaker, 2);
+//	std::thread baker3 (doBaker, 3);
+
+	// join waiter thread
+	waiter.join();
+	// join bakers threads
+	baker0.join();
+	baker1.join();
+//	baker2.join();
+//	baker3.join();
+
+	// audit
+	audit_results();
+
 	return SUCCESS;
 }
 

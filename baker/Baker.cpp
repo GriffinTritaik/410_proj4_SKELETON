@@ -1,3 +1,11 @@
+/*
+ * logger.cpp
+ *
+ * Henry R. Wilson and Griffin P. Tritaik
+ *
+ * 2020-04
+ */
+
 #include <mutex>
 
 //Will need to include externs.h
