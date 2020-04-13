@@ -21,7 +21,7 @@ Baker::Baker(int id):id(id)
 }
 
 /*
- * No fancy data structures, no actual implementatio.
+ * No fancy data structures, no actual implementationes.
  * Is this true?
  */
 Baker::~Baker()

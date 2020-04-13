@@ -10,6 +10,7 @@
 #include "stdlib.h"
 
 #include "../includes/waiter.h"
+#include "../includes/externs.h"
 
 /*
  * this is where will will need to use extern.h's conditional variable to make sure we write before we bake!
@@ -32,7 +33,7 @@ Waiter::~Waiter()
 //contains new order
 //otherwise return contains fileIO error
 int Waiter::getNext(ORDER &anOrder){
-	return SUCCESS;
+	return myIO.getNext(anOrder);
 }
 
 //contains a loop that will get orders from filename one at a time
@@ -41,14 +42,28 @@ int Waiter::getNext(ORDER &anOrder){
 //when finished exits loop and signals baker(s) using cv_order_inQ that
 //it is done using b_WaiterIsFinished
 void Waiter::beWaiter() {
-	//Loop
+	//Loop forever
+	while(1){
 		//Get order (call getNext)
-			//Check if we ran out of orders
+		ORDER theOrder;
+		int iotest = this->getNext(theOrder);
+
+		//Check if we ran out of orders (not a critical section b/c we only have one waiter)
+		if (iotest != SUCCESS){
 			//handle out of orders
-				//set b_waiterisfinished = true
-		//grab order_in mutex w/lockguard
-		//Push order onto order_in_q
+			b_WaiterIsFinished = true;
+			break;
+		}
+
+		//grab order_in mutex w/lockguard CRITICAL SECTION
+		{
+			std::lock_guard<std::mutex> lck(mutex_order_inQ);
+			//Push order onto order_in_q
+			order_in_Q.push(theOrder);
+		}
+
 		//Notify bakers w/ notify_all on cv_order_inQ
-		//repeat
+		cv_order_inQ.notify_all();
+	}
 }
 
