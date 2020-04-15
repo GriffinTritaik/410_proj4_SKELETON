@@ -33,7 +33,35 @@ Baker::~Baker()
  * I assume we get an order object from the queue
  */
 void Baker::bake_and_box(ORDER &anOrder) {
-	
+
+	int boxes_needed = anOrder.number_donuts/12;
+	int extra_donuts = anOrder.number_donuts%12;
+	if(extra_donuts){
+		boxes_needed++;
+	}
+
+	int donuts_left = anOrder.number_donuts;
+
+	for(int i = 0; i < boxes_needed; i++){
+		if(donuts_left > 11){
+			Box aBox;
+			for(int j = 0; j < 12; j++){
+				donuts_left--;
+				DONUT aDonut;
+				aBox.addDonut(aDonut);
+			}
+			anOrder.boxes.push_back(aBox);
+		}
+		else{
+			Box aBox;
+			while(donuts_left > 0){
+				donuts_left--;
+				DONUT aDonut;
+				aBox.addDonut(aDonut);
+			}
+			anOrder.boxes.push_back(aBox);
+		}
+	}
 }
 
 /*
