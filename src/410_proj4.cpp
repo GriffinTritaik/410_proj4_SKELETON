@@ -89,7 +89,7 @@ int main()
 {
 	// Open sample input in waiter thread
 	// start waiter thread
-	std::thread waiter(doWaiter, 0, "../in1.txt");
+	std::thread waiter(doWaiter, 0, "in1.txt");
 
 	// start bakers threads
 	std::thread baker0 (doBaker, 0);
