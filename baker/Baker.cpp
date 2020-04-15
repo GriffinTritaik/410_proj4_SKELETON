@@ -9,6 +9,7 @@
 #include <mutex>
 
 //Will need to include externs.h
+#include "../includes/externs.h"
 #include "../includes/baker.h"
 using namespace std;
 
@@ -42,23 +43,64 @@ void Baker::bake_and_box(ORDER &anOrder) {
  */
 void Baker::beBaker() {
 	//Loop (not waiter_done)
+	while(!b_WaiterIsFinished){
 		//Sleep on cv
+		{
+		std::unique_lock<std::mutex> lck(mutex_order_inQ);
+		cv_order_inQ.wait(lck);
+		}
 
-		//Get order_in mutex (lockguard)
+		ORDER theOrder;
+		//get mutex_order_inQ lock
+		{
+		std::lock_guard<std::mutex> lck(mutex_order_inQ);
 		//get ONE order from oreder_in_q
+		theOrder = order_in_Q.front();
+		order_in_Q.pop();
 		//release previous lg
+		}
+
 
 		//call bake_and_box
+		this->bake_and_box(theOrder);
 		//get orderout mutex (lg)
+		{
+			std::lock_guard<std::mutex> lck(mutex_order_outQ);
 		//push finished order onto oov
+			order_out_Vector.push_back(theOrder);
 		//release previous lg
+		}
 
 		//Will the two mutices give us DEADLOCK???
+			//No.
 
 		//repeat
+	}
 
 	//When out of loop: (when waiter is done)
 	//loop (while queue not empty):
-		//Get orders, box, send out, etc.
-		//until no orders on vector.
+	while(!order_in_Q.empty()){
+
+		ORDER theOrder;
+		//get mutex_order_inQ lock
+		{
+		std::lock_guard<std::mutex> lck(mutex_order_inQ);
+		//get ONE order from oreder_in_q
+		theOrder = order_in_Q.front();
+		order_in_Q.pop();
+		//release previous lg
+		}
+
+		//call bake_and_box
+		this->bake_and_box(theOrder);
+		//get orderout mutex (lg)
+		{
+			std::lock_guard<std::mutex> lck(mutex_order_outQ);
+		//push finished order onto oov
+			order_out_Vector.push_back(theOrder);
+		//release previous lg
+		}
+
+	}
+
 }

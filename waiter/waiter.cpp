@@ -63,7 +63,9 @@ void Waiter::beWaiter() {
 		}
 
 		//Notify bakers w/ notify_all on cv_order_inQ
-		cv_order_inQ.notify_all();
+		cv_order_inQ.notify_one();
 	}
+	//Paranoia
+	cv_order_inQ.notify_all();
 }
 
